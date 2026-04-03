@@ -9,4 +9,4 @@ Download the OmegaPlus v3.0.3 Apptainer image here: https://github.com/RepAdapt/
 <pre>wget https://github.com/RepAdapt/selective_sweeps_pipeline/releases/download/v3.0.3/OmegaPlus.sif</pre>
 
 
-# UNDER DEVELOPMENT
+# DO NOT USE YET, STILL UNDER DEVELOPMENT
