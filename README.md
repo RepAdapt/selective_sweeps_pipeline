@@ -6,7 +6,7 @@ I provided SLURM syntax for HPC deployment, specifying 2 CPUs threads, 4GB RAM p
 
 # Input: 
 SNP VCF file (with tabix index) and a .gff file with genes.
-A tabix index can be generated with:
+A tabix index should have been created as part of the SNP calling pipeline. It can be generated with:
 <pre> tabix -p vcf vcf_file.vcf.gz </pre>
 
 # Software: OmegaPlus v3.0.3 and bcftools v1.16
