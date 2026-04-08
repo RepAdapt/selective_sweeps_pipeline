@@ -60,6 +60,6 @@ done < genes_coord.txt
 
 
 cat temp_dir/formatted_* > temp_dir/temp.txt
-awk 'NR % 3 == 2' temp_dir/temp.txt  > final_omegaplus_genes_results.txt
+awk 'NR % 3 == 2' temp_dir/temp.txt  > OmegaPlus_$FILE\_final_output.txt
 rm -r temp_dir
 
