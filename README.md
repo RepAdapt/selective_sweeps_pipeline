@@ -9,7 +9,7 @@ It can be run on any Linux system without job scheduler (by removing the SLURM s
 I provided SLURM syntax for HPC deployment (change this according to your HPC job scheduler), specifying 2 CPUs threads, 4GB RAM per CPU and 23 HOURS run time. These requirements can be changed, but given that OmegaPlus is run on a per gene basis and we take only 3 scans per gene the analysis is very fast, so there is very little advantage in using more than 2 threads or more RAM. Run time might have to be increased for large datasets.
 
 # Input: 
-SNP VCF file (with tabix index .tbi) and a .gff file with genes.
+SNP VCF (vcf.gz) file (with tabix index .tbi) and a .gff file with genes.
 
 
 A tabix index (.tbi) of the VCF file should have been created as part of the SNP calling pipeline. This can be generated with:
