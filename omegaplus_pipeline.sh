@@ -4,12 +4,12 @@
 #SBATCH --mem-per-cpu=4G
 #SBATCH --account=def-yeaman
 
-# This script runs OmegaPlus by gene using 2 threads. You can adjust the number of threads in the SLURM specification above AND in the OmegaPlus command below.
-# This uses a grid of size 3 for each gene whcih results in 3 measurements: one at the first SNP in a gene, one at the last SNP and one equidistant between these (approx. in the middle of the gene).
-# Increase time limit according to your dataset
+# This script runs OmegaPlus by gene using 2 CPUs threads. You can adjust the number of threads in the SLURM specification above AND in the OmegaPlus command at line 38. There is little to no advantage in using more threads.
+# We use a OmegaPlus grid of size of 3 for each gene which results in 3 measurements: one at the first SNP in a gene, one at the last SNP and one equidistant between these (approx. in the middle of the gene).
+# Adjust time limit according to the number of genes in your dataset (now 23 hours).
 
 
-### Formatting the gff: extracting genes, adding 1000 bp flanks on either side and also saving original coordinates (without flanks) ###
+### Formatting the gff: extracting genes, adding 1000 bp flanks on either side and saving original coordinates (without flanks) ###
 
 awk -F'\t' '$3 == "gene"' *.gff | awk '{OFS="\t"}NR>1{print $1,$4-1000,$5+1000,$1":"$4"-"$5}' | awk '{OFS="\t"}{if ($2 > 0)  print $1":"$2"-"$3,$4; else print $1":"1"-"$3,$4;}' > genes_coord.txt
 
@@ -20,14 +20,14 @@ awk -F'\t' '$3 == "gene"' *.gff | awk '{OFS="\t"}NR>1{print $1,$4-1000,$5+1000,$
 
 mkdir results
 
-# Specify your species file name. It also needs a VCF index file which can be generated with tabix: tabix -p final_variants.vcf.gz
+# Specify your VCF file name. It also needs a VCF index file which can be generated with tabix: tabix -p final_variants.vcf.gz
 
 FILE="final_variants.vcf.gz"
 
 
-# The code below loop over all genes. For each gene, extract the gene region with 1000 bp flanking on either side from the VCF using bcftools
+# The code below loop over all genes. For each gene, it extracts the gene region with 1000 bp flanking on either side from the VCF using bcftools
 # Then OmegaPlus is run on each gene using a grid size of 3, minwin 500 and maxwin 10000
-# Each output is given the original (start and end without added flanks) gene name as CHROM:start-end 
+# Each output file name includes the original (start and end without added flanks) gene coordinates formatted as CHROM:start-end 
 
 
 regex='(.+)	(.+)'
