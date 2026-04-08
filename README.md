@@ -2,7 +2,6 @@
 A pipeline for scanning all genes of a species to detect signals of selective sweeps, based on OmegaPlus.
 
 
-# DO NOT USE YET, STILL UNDER DEVELOPMENT
 It can be run on any Linux system without job scheduler (by removing the SLURM syntax at the top of the omegaplus_pipeline.sh script), or can be deployed to any HPC.
 
 
