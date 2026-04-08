@@ -25,8 +25,8 @@ mkdir results
 FILE="final_variants.vcf.gz"
 
 
-# The code below loop over all genes. For each gene, it extracts the gene region with 1000 bp flanking on either side from the VCF using bcftools
-# Then OmegaPlus is run on each gene using a grid size of 3, minwin 500 and maxwin 10000
+# The code below loop over all genes. For each gene, it extracts from the VCF (with bcftools) the gene region with 1000 bp added on either side
+# Then OmegaPlus is run on each expanded gene using a grid size of 3, minwin 500 and maxwin 10000
 # Each output file name includes the original (start and end without added flanks) gene coordinates formatted as CHROM:start-end 
 
 
