@@ -27,7 +27,7 @@ Place the OmegaPlus and bcftools Apptainer images in a directory named "apptaine
 <pre>mkdir apptainer</pre>
 <pre>mv OmegaPlus.sif bcftools:1.16--hfe4b78e_1 apptainer</pre>
 
-# Run with:
+# Run this pipeline with:
 <pre> chmod +x omegaplus_pipeline.sh </pre>
 <pre> ./omegaplus_pipeline.sh </pre>
 
