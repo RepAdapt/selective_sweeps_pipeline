@@ -9,9 +9,6 @@ SNP VCF file (with tabix index) and a .gff file with genes in the working direct
 A tabix index should have been created as part of the SNP calling pipeline. It can be generated with:
 <pre> tabix -p vcf vcf_file.vcf.gz </pre>
 
-# Run with:
-<pre> chmod +x omegaplus_pipeline.sh </pre>
-<pre> ./omegaplus_pipeline.sh </pre>
 
 # Software: OmegaPlus v3.0.3 and bcftools v1.16
 Download the OmegaPlus v3.0.3 Apptainer image here: https://github.com/RepAdapt/selective_sweeps_pipeline/releases/download/v3.0.3/OmegaPlus.sif
@@ -22,5 +19,12 @@ Download the OmegaPlus v3.0.3 Apptainer image here: https://github.com/RepAdapt/
 Download the bcftools v1.16 Apptainer image with: <pre> singularity run https://depot.galaxyproject.org/singularity/bcftools:1.16--hfe4b78e_1 </pre>
 
 <b> Place the OmegaPlus and bcftools Apptainer images in a directory named "apptainer" within your working directory. </b>
+
+<pre>mkdir apptainer</pre>
+<pre>mv OmegaPlus.sif bcftools:1.16--hfe4b78e_1 apptainer</pre>
+
+# Run with:
+<pre> chmod +x omegaplus_pipeline.sh </pre>
+<pre> ./omegaplus_pipeline.sh </pre>
 
 # DO NOT USE YET, STILL UNDER DEVELOPMENT
