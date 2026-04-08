@@ -1,4 +1,5 @@
 # selective_sweeps_pipeline
+# DO NOT USE YET, STILL UNDER DEVELOPMENT
 A pipeline for scanning all genes of a species to detect signals of selective sweeps, based on OmegaPlus.
 
 
@@ -32,4 +33,4 @@ Place the OmegaPlus and bcftools Apptainer images in a directory named "apptaine
 <pre> chmod +x omegaplus_pipeline.sh </pre>
 <pre> ./omegaplus_pipeline.sh </pre>
 
-# DO NOT USE YET, STILL UNDER DEVELOPMENT
+
