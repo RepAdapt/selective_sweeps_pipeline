@@ -21,7 +21,6 @@ awk -F'\t' '$3 == "gene"' *.gff | awk '{OFS="\t"}{print $1,$4-1000,$5+1000,$1":"
 
 ### OmegaPlus ###
 
-mkdir omegaplus_raw_output
 
 # Specify your VCF file name. It also needs a VCF index file which can be generated with tabix: tabix -p final_variants.vcf.gz
 
@@ -40,26 +39,17 @@ while read p; do
 
 if [[ $p =~ $regex ]];  then 	apptainer exec apptainer/bcftools\:1.16--hfe4b78e_1 bcftools view $FILE --regions ${BASH_REMATCH[1]} -Ov -o $FILE\_${BASH_REMATCH[2]}\.vcf; apptainer run apptainer/OmegaPlus.sif -input $FILE\_${BASH_REMATCH[2]}\.vcf -minwin 500 -maxwin 100000 -grid 3 -name $FILE\_${BASH_REMATCH[2]} -seed 12345 -threads 2; fi
 	rm $FILE\_${BASH_REMATCH[2]}\.vcf
-	mv OmegaPlus_Report* omegaplus_raw_output
+        tail -n +3 OmegaPlus_Report.*.vcf.gz_${BASH_REMATCH[2]} | awk -v var="${BASH_REMATCH[2]}" 'BEGIN {OFS="\t"} {print var, $2}' >> temp.txt	
+        rm OmegaPlus_Report*
         rm OmegaPlus_Info*
+        
 done < genes_coord.txt
 
 
 
 
-# Format results
+# Format results: for each gene only retain the measurement (out of 3 measurements) in the center
 
-mkdir temp_dir
-
-while read p; do
-
-if [[ $p =~ $regex ]];  then tail -n +3 omegaplus_raw_output/OmegaPlus_Report.*.vcf.gz_${BASH_REMATCH[2]} | awk -v var="${BASH_REMATCH[2]}" 'BEGIN {OFS="\t"} {print var, $2}' > temp_dir/formatted_${BASH_REMATCH[2]}; fi
-
-done < genes_coord.txt
-
-
-
-cat temp_dir/formatted_* > temp_dir/temp.txt
 awk 'NR % 3 == 2' temp_dir/temp.txt  > OmegaPlus_$FILE\_final_output.txt
-rm -r temp_dir
+rm temp.txt
 
