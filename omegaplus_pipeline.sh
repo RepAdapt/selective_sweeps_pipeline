@@ -6,6 +6,12 @@
 
 module load apptainer
 
+# Specify your VCF file name. It also needs a VCF index file which can be generated with tabix: tabix -p final_variants.vcf.gz
+
+FILE="*.vcf.gz"
+
+
+
 
 # This script runs OmegaPlus by gene using 2 CPUs threads. You can adjust the number of threads in the SLURM specification above AND in the OmegaPlus command at line 38. There is little to no advantage in using more threads.
 # We use a OmegaPlus grid of size 3 for each gene which results in 3 measurements: one at the first SNP in a gene, one at the last SNP and one equidistant between these (approx. in the middle of the gene).
@@ -21,12 +27,6 @@ awk -F'\t' '$3 == "gene"' *.gff | awk '{OFS="\t"}{print $1,$4-1000,$5+1000,$1":"
 
 ### OmegaPlus ###
 
-
-# Specify your VCF file name. It also needs a VCF index file which can be generated with tabix: tabix -p final_variants.vcf.gz
-
-FILE="final_variants.vcf.gz"
-
-
 # The code below loop over all genes. For each gene, it extracts from the VCF (with bcftools) the gene region with 1000 bp added on either side
 # Then OmegaPlus is run on each expanded gene using a grid size of 3, minwin 500 and maxwin 100000
 # Each output file name includes the original (start and end without added flanks) gene coordinates formatted as CHROM:start-end 
@@ -37,9 +37,9 @@ regex='(.+)	(.+)'
 
 while read p; do
 
-if [[ $p =~ $regex ]];  then 	apptainer exec apptainer/bcftools\:1.16--hfe4b78e_1 bcftools view $FILE --regions ${BASH_REMATCH[1]} -Ov -o $FILE\_${BASH_REMATCH[2]}\.vcf; apptainer run apptainer/OmegaPlus.sif -input $FILE\_${BASH_REMATCH[2]}\.vcf -minwin 500 -maxwin 100000 -grid 3 -name $FILE\_${BASH_REMATCH[2]} -seed 12345 -threads 2; fi
-        rm $FILE\_${BASH_REMATCH[2]}\.vcf
-        tail -n +3 OmegaPlus_Report.*.vcf.gz_${BASH_REMATCH[2]} | awk -v var="${BASH_REMATCH[2]}" 'BEGIN {OFS="\t"} {print var, $2}' >> temp.txt	
+if [[ $p =~ $regex ]];  then 	apptainer exec apptainer/bcftools\:1.16--hfe4b78e_1 bcftools view $FILE --regions ${BASH_REMATCH[1]} -Ov -o temp_${BASH_REMATCH[2]}\.vcf; apptainer run apptainer/OmegaPlus.sif -input temp_${BASH_REMATCH[2]}\.vcf -minwin 500 -maxwin 100000 -grid 3 -name output_${BASH_REMATCH[2]} -seed 12345 -threads 2; fi
+        rm temp_${BASH_REMATCH[2]}\.vcf
+        tail -n +3 OmegaPlus_Report.output_${BASH_REMATCH[2]} | awk -v var="${BASH_REMATCH[2]}" 'BEGIN {OFS="\t"} {print var, $2}' >> temp.txt	
         rm OmegaPlus_Report*
         rm OmegaPlus_Info*
         
