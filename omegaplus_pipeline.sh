@@ -50,6 +50,6 @@ done < genes_coord.txt
 
 # Format results: for each gene only retain the measurement (out of 3 measurements) in the center
 
-awk 'NR % 3 == 2' temp.txt  > OmegaPlus_$FILE\_final_output.txt
+awk 'NR % 3 == 2' temp.txt  > OmegaPlus_final_output.txt
 rm temp.txt
 
