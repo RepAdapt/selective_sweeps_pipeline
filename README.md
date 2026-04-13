@@ -44,6 +44,6 @@ working-dir/
 
 # Run this pipeline from the working-dir with:
 <pre> chmod +x omegaplus_pipeline.sh </pre>
-<pre> ./omegaplus_pipeline.sh </pre>
+<pre> ./omegaplus_pipeline.sh -vcf vcf_file.vcf.gz -gff genes.gff </pre>
 
 
