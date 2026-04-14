@@ -46,4 +46,7 @@ working-dir/
 <pre> chmod +x omegaplus_pipeline.sh </pre>
 <pre> ./omegaplus_pipeline.sh -vcf vcf_file.vcf.gz -gff genes.gff </pre>
 
+On an HPC, edit the run.sh script and then:
+<pre> sbatch run.sh </pre>
+
 
