@@ -1,6 +1,6 @@
+#!/bin/bash
+
 # Specify your inputs: vcf + gff. It also needs a VCF index file which can be generated with tabix: tabix -p final_variants.vcf.gz
-
-
 VCF=""
 GFF=""
 
