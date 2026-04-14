@@ -1,11 +1,3 @@
-#!/bin/bash
-#SBATCH --time=0-23:00
-#SBATCH --cpus-per-task=2
-#SBATCH --mem-per-cpu=4G
-#SBATCH --account=def-yeaman
-
-module load apptainer
-
 # Specify your inputs: vcf + gff. It also needs a VCF index file which can be generated with tabix: tabix -p final_variants.vcf.gz
 
 
