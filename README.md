@@ -1,5 +1,5 @@
 # selective_sweeps_pipeline
-# DO NOT USE YET, STILL UNDER DEVELOPMENT
+STILL UNDER DEVELOPMENT
 
 A pipeline for scanning all genes of a species to detect signals of selective sweeps, based on OmegaPlus.
 
