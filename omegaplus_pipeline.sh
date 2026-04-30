@@ -1,6 +1,6 @@
+#!/bin/bash
+
 # Specify your inputs: vcf + gff. It also needs a VCF index file which can be generated with tabix: tabix -p final_variants.vcf.gz
-
-
 VCF=""
 GFF=""
 
@@ -38,9 +38,8 @@ echo "GFF file: $GFF"
 
 
 
-# This script runs OmegaPlus by gene using 2 CPUs threads. You can adjust the number of threads in the SLURM specification above AND in the OmegaPlus command at line 38. There is little to no advantage in using more threads.
+# This script runs OmegaPlus by gene using 2 CPUs threads. You can adjust the number of threads in the OmegaPlus command in the code below. There is little to no advantage in using more threads in this set up.
 # We use a OmegaPlus grid of size 3 for each gene which results in 3 measurements: one at the first SNP in a gene, one at the last SNP and one equidistant between these (approx. in the middle of the gene).
-# Adjust time limit according to the number of genes in your dataset (now 23 hours).
 
 
 ### Formatting the gff: extracting genes, adding 1000 bp flanks on either side and saving original coordinates (without flanks) ###
