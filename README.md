@@ -4,10 +4,12 @@ STILL UNDER DEVELOPMENT
 A pipeline for scanning all genes of a species to detect signals of selective sweeps, based on OmegaPlus.
 
 
-It can be run on any Linux system without job scheduler (by removing the SLURM syntax at the top of the omegaplus_pipeline.sh script), or can be deployed to any HPC.
+It can be run on any Linux system without job scheduler, or can be deployed to any HPC.
 
 
-I provided SLURM syntax for HPC deployment (change this according to your HPC job scheduler), specifying 2 CPUs threads, 4GB RAM per CPU and 48 HOURS run time. These requirements can be changed, but given that OmegaPlus is run on a per gene basis and we take only 3 scans per gene the analysis is very fast, so there is very little advantage in using more than 2 threads or more RAM. Run time might have to be increased for very large datasets.
+I provided SLURM syntax for HPC deployment in run.sh (change this according to your HPC job scheduler), specifying 2 CPUs threads, 4GB RAM per CPU and 48 HOURS run time. These requirements can be changed, but given that OmegaPlus is run on a per gene basis and we take only 3 scans per gene the analysis is very fast, so there is very little advantage in using more than 2 threads or more RAM. Run time might have to be increased for very large datasets.
+
+Apptainer is required.
 
 # Input: 
 SNP VCF (vcf.gz) file (with tabix index .tbi) and a .gff file with genes.
