@@ -18,7 +18,7 @@ SNP VCF (vcf.gz) file (with tabix index .tbi) and a .gff file with genes.
 A tabix index (.tbi) of the VCF file should have been created as part of the SNP calling pipeline. This can be generated with:
 <pre> tabix -p vcf vcf_file.vcf.gz </pre>
 
-# Do not filter the VCF by MAF as it is important to keep all SNPs. However, it may be a good idea to remove singletons.
+<b>Do not filter the VCF by MAF as it is important to keep all SNPs. However, it is a good idea to remove singletons. </b>
 
 # Software: OmegaPlus v3.0.3 and bcftools v1.16
 Download the OmegaPlus v3.0.3 Apptainer image here: https://github.com/RepAdapt/selective_sweeps_pipeline/releases/download/v3.0.3/OmegaPlus.sif
