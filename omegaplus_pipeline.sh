@@ -55,17 +55,30 @@ awk -F'\t' '$3 == "gene"' $GFF | awk '{OFS="\t"}{print $1,$4-1000,$5+1000,$1":"$
 # Then OmegaPlus is run on each expanded gene using a grid size of 3, minwin 500 and maxwin 100000
 # Each output file name includes the original (start and end without added flanks) gene coordinates formatted as CHROM:start-end 
 
-
+> temp.txt
 regex='(.+)	(.+)'
 
 
 while read p; do
 
-if [[ $p =~ $regex ]];  then 	apptainer exec apptainer/bcftools\:1.16--hfe4b78e_1 bcftools view $VCF --regions ${BASH_REMATCH[1]} -Ov -o temp_${BASH_REMATCH[2]}\.vcf; apptainer run apptainer/OmegaPlus.sif -input temp_${BASH_REMATCH[2]}\.vcf -minwin 500 -maxwin 100000 -grid 3 -name output_${BASH_REMATCH[2]} -seed 12345 -threads 2; fi
-        rm temp_${BASH_REMATCH[2]}\.vcf
-        tail -n +3 OmegaPlus_Report.output_${BASH_REMATCH[2]} | awk -v var="${BASH_REMATCH[2]}" 'BEGIN {OFS="\t"} {print var, $2}' >> temp.txt	
-        rm OmegaPlus_Report*
-        rm OmegaPlus_Info*
+if [[ $p =~ $regex ]]; then
+    apptainer exec apptainer/bcftools:1.16--hfe4b78e_1 \
+        bcftools view "$VCF" --regions "${BASH_REMATCH[1]}" -Ov -o "temp_${BASH_REMATCH[2]}.vcf"
+
+    if [[ $(grep -vc '^#' "temp_${BASH_REMATCH[2]}.vcf") -ge 10 ]]; then
+        apptainer run apptainer/OmegaPlus.sif \
+            -input "temp_${BASH_REMATCH[2]}.vcf" \
+            -minwin 500 -maxwin 100000 -grid 3 \
+            -name "output_${BASH_REMATCH[2]}" \
+            -seed 12345 -threads 2
+    fi
+fi
+
+
+rm temp_${BASH_REMATCH[2]}\.vcf
+tail -n +3 OmegaPlus_Report.output_${BASH_REMATCH[2]} | awk -v var="${BASH_REMATCH[2]}" 'BEGIN {OFS="\t"} {print var, $2}' >> temp.txt	
+rm OmegaPlus_Report*
+rm OmegaPlus_Info*
         
 done < genes_coord.txt
 
