@@ -52,8 +52,7 @@ awk -F'\t' '$3 == "gene"' $GFF | awk '{OFS="\t"}{print $1,$4-1000,$5+1000,$1":"$
 ### OmegaPlus ###
 
 # The code below loop over all genes. For each gene, it extracts from the VCF (with bcftools) the gene region with 1000 bp added on either side
-# Then OmegaPlus is run on each expanded gene using a grid size of 3, minwin 500 and maxwin 100000
-# Each output file name includes the original (start and end without added flanks) gene coordinates formatted as CHROM:start-end 
+# If the extended gene contains 10 or more SNPs, then OmegaPlus is run on the expanded gene using a grid size of 3, minwin 500 and maxwin 100000
 
 > temp.txt
 regex='(.+)	(.+)'
