@@ -49,6 +49,8 @@ working-dir/
 <pre> chmod +x omegaplus_pipeline.sh </pre>
 <pre> ./omegaplus_pipeline.sh -vcf vcf_file.vcf.gz -gff genes.gff </pre>
 
+It is not necessary for the input VCF and GFF files to be located in the working directory; their full paths can be specified. However, the apptainer subdirectory containing the required Apptainer images must be present within the working directory.
+
 On an HPC, edit the run.sh script with your VCF and gff files names and then:
 <pre> sbatch run.sh </pre>
 
