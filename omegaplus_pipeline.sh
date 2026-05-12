@@ -51,12 +51,8 @@ awk -F'\t' '$3 == "gene"' $GFF | awk '{OFS="\t"}{print $1,$4-1000,$5+1000,$1":"$
 
 ### OmegaPlus ###
 
-# The code below loop over all genes. For each gene, it extracts from the VCF (with bcftools) the gene region with 1000 bp added on either side
-# If the extended gene contains 10 or more SNPs, then OmegaPlus is run on the expanded gene using a grid size of 3, minwin 500 and maxwin 100000
-
 > temp.txt
 regex='(.+)	(.+)'
-
 
 while read p; do
 
@@ -64,21 +60,44 @@ if [[ $p =~ $regex ]]; then
     apptainer exec apptainer/bcftools:1.16--hfe4b78e_1 \
         bcftools view "$VCF" --regions "${BASH_REMATCH[1]}" -Ov -o "temp_${BASH_REMATCH[2]}.vcf"
 
-    if [[ $(grep -vc '^#' "temp_${BASH_REMATCH[2]}.vcf") -ge 10 ]]; then
-        apptainer run apptainer/OmegaPlus.sif \
-            -input "temp_${BASH_REMATCH[2]}.vcf" \
-            -minwin 500 -maxwin 100000 -grid 3 \
-            -name "output_${BASH_REMATCH[2]}" \
-            -seed 12345 -threads 2
-    fi
-fi
+    snps=$(grep -vc '^#' "temp_${BASH_REMATCH[2]}.vcf")
 
+    if [[ $snps -lt 10 ]]; then
+        echo -e "${BASH_REMATCH[2]}\tNA" >> temp.txt
+    else
+
+        if [[ $snps -ge 10 ]]; then
+
+            max_time=300
+
+            while true; do
+                timeout --kill-after=10s $max_time apptainer run apptainer/OmegaPlus.sif \
+                    -input "temp_${BASH_REMATCH[2]}.vcf" \
+                    -minwin 500 -maxwin 100000 -grid 3 \
+                    -name "output_${BASH_REMATCH[2]}" \
+                    -seed 12345 -threads 2
+
+                exit_code=$?
+
+                if [[ $exit_code -eq 0 ]]; then
+                    break
+                elif [[ $exit_code -eq 124 ]]; then
+                    echo "Timeout → retrying ${BASH_REMATCH[2]}"
+                else
+                    echo "Error ($exit_code) → retrying ${BASH_REMATCH[2]}"
+                fi
+            done
+
+            tail -n +3 OmegaPlus_Report.output_${BASH_REMATCH[2]} | awk -v var="${BASH_REMATCH[2]}" 'BEGIN {OFS="\t"} {print var, $2}' >> temp.txt
+            rm OmegaPlus_Report*
+            rm OmegaPlus_Info*
+
+        fi
+    fi
 
 rm temp_${BASH_REMATCH[2]}\.vcf
-tail -n +3 OmegaPlus_Report.output_${BASH_REMATCH[2]} | awk -v var="${BASH_REMATCH[2]}" 'BEGIN {OFS="\t"} {print var, $2}' >> temp.txt	
-rm OmegaPlus_Report*
-rm OmegaPlus_Info*
-        
+fi
+
 done < genes_coord.txt
 
 
