@@ -64,6 +64,8 @@ if [[ $p =~ $regex ]]; then
 
     if [[ $snps -lt 10 ]]; then
         echo -e "${BASH_REMATCH[2]}\tNA" >> temp.txt
+        echo -e "${BASH_REMATCH[2]}\tNA" >> temp.txt
+        echo -e "${BASH_REMATCH[2]}\tNA" >> temp.txt
     else
 
         if [[ $snps -ge 10 ]]; then
