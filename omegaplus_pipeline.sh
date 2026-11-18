@@ -62,13 +62,13 @@ if [[ $p =~ $regex ]]; then
 
     snps=$(grep -vc '^#' "temp_${BASH_REMATCH[2]}.vcf")
 
-    if [[ $snps -lt 10 ]]; then
+    if [[ $snps -lt 5 ]]; then
         echo -e "${BASH_REMATCH[2]}\tNA" >> temp.txt
         echo -e "${BASH_REMATCH[2]}\tNA" >> temp.txt
         echo -e "${BASH_REMATCH[2]}\tNA" >> temp.txt
     else
 
-        if [[ $snps -ge 10 ]]; then
+        if [[ $snps -ge 5 ]]; then
 
             max_time=300
 
