@@ -75,7 +75,7 @@ if [[ $p =~ $regex ]]; then
             while true; do
                 timeout --kill-after=10s $max_time apptainer run apptainer/OmegaPlus.sif \
                     -input "temp_${BASH_REMATCH[2]}.vcf" \
-                    -minwin 500 -maxwin 100000 -grid 3 \
+                    -minwin 500 -maxwin 1000000 -grid 3 \
                     -name "output_${BASH_REMATCH[2]}" \
                     -seed 12345 -threads 2
 
@@ -107,6 +107,6 @@ done < genes_coord.txt
 
 # Format results: for each gene only retain the measurement (out of 3 measurements) in the center
 
-awk 'NR % 3 == 2' temp.txt  > OmegaPlus_$VCF\_final_output.txt
+awk 'NR % 3 == 2' temp.txt  > $VCF\_gabrielenocchi_omegaplus.txt
 rm temp.txt
 
