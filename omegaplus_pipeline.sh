@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Specify your inputs: vcf + gff. It also needs a VCF index file which can be generated with tabix: tabix -p final_variants.vcf.gz
+# Specify your inputs: vcf + gff.
 VCF=""
 GFF=""
 
@@ -34,7 +34,7 @@ fi
 
 echo "VCF file: $VCF"
 echo "GFF file: $GFF"
-
+NAME=$(basename "$VCF" | cut -d_ -f1-3)
 
 
 
@@ -44,28 +44,33 @@ echo "GFF file: $GFF"
 
 ### Formatting the gff: extracting genes, adding 1000 bp flanks on either side and saving original coordinates (without flanks) ###
 
-awk -F'\t' '$3 == "gene"' $GFF | awk '{OFS="\t"}{print $1,$4-1000,$5+1000,$1":"$4"-"$5}' | awk '{OFS="\t"}{if ($2 > 0)  print $1":"$2"-"$3,$4; else print $1":"1"-"$3,$4;}' > genes_coord.txt
+awk -F'\t' '$3 == "gene"' $GFF | awk '{OFS="\t"}{print $1,$4-1000,$5+1000,$1":"$4"-"$5}' | awk '{OFS="\t"}{if ($2 > 0)  print $1":"$2"-"$3,$4; else print $1":"1"-"$3,$4;}' > ${NAME}_genes_coord.txt
 
 
 
+### Filtering singletons and keeping only diallelic sites
+apptainer exec apptainer/vcftools:0.1.16--pl5321hdcf5f25_9 vcftools --gzvcf "$VCF" --minQ 30 --minDP 5 --max-alleles 2 --mac 2 --recode --recode-INFO-all --stdout > ${NAME}_filtered.vcf
+
+bgzip ${NAME}_filtered.vcf
+tabix -p vcf ${NAME}_filtered.vcf.gz
 
 ### OmegaPlus ###
 
-> temp.txt
+> ${NAME}_temp.txt
 regex='(.+)	(.+)'
 
 while read p; do
 
 if [[ $p =~ $regex ]]; then
     apptainer exec apptainer/bcftools:1.16--hfe4b78e_1 \
-        bcftools view "$VCF" --regions "${BASH_REMATCH[1]}" -Ov -o "temp_${BASH_REMATCH[2]}.vcf"
+        bcftools view ${NAME}_filtered.vcf.gz --regions "${BASH_REMATCH[1]}" -Ov -o "temp_${BASH_REMATCH[2]}.vcf"
 
     snps=$(grep -vc '^#' "temp_${BASH_REMATCH[2]}.vcf")
 
     if [[ $snps -lt 5 ]]; then
-        echo -e "${BASH_REMATCH[2]}\tNA" >> temp.txt
-        echo -e "${BASH_REMATCH[2]}\tNA" >> temp.txt
-        echo -e "${BASH_REMATCH[2]}\tNA" >> temp.txt
+        echo -e "${BASH_REMATCH[2]}\tNA" >> ${NAME}_temp.txt
+        echo -e "${BASH_REMATCH[2]}\tNA" >> ${NAME}_temp.txt
+        echo -e "${BASH_REMATCH[2]}\tNA" >> ${NAME}_temp.txt
     else
 
         if [[ $snps -ge 5 ]]; then
@@ -90,7 +95,7 @@ if [[ $p =~ $regex ]]; then
                 fi
             done
 
-            tail -n +3 OmegaPlus_Report.output_${BASH_REMATCH[2]} | awk -v var="${BASH_REMATCH[2]}" 'BEGIN {OFS="\t"} {print var, $2}' >> temp.txt
+            tail -n +3 OmegaPlus_Report.output_${BASH_REMATCH[2]} | awk -v var="${BASH_REMATCH[2]}" 'BEGIN {OFS="\t"} {print var, $2}' >> ${NAME}_temp.txt
             rm OmegaPlus_Report*
             rm OmegaPlus_Info*
 
@@ -100,13 +105,15 @@ if [[ $p =~ $regex ]]; then
 rm temp_${BASH_REMATCH[2]}\.vcf
 fi
 
-done < genes_coord.txt
+done < ${NAME}_genes_coord.txt
 
 
 
 
 # Format results: for each gene only retain the measurement (out of 3 measurements) in the center
 
-awk 'NR % 3 == 2' temp.txt  > $VCF\_gabrielenocchi_omegaplus.txt
-rm temp.txt
+awk 'NR % 3 == 2' ${NAME}_temp.txt  > ${NAME}_gabrielenocchi_omegaplus.txt
+rm ${NAME}_temp.txt
+rm ${NAME}_filtered.vcf.g*
+rm ${NAME}_genes_coord.txt
 
