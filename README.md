@@ -32,7 +32,7 @@ vcftools
 Place the OmegaPlus and bcftools Apptainer images in a directory named "apptainer" within your working directory: 
 
 <pre>mkdir apptainer</pre>
-<pre>mv OmegaPlus.sif bcftools:1.16--hfe4b78e_1 apptainer</pre>
+<pre>mv OmegaPlus.sif bcftools:1.16--hfe4b78e_1 vcftools:0.1.16--pl5321hdcf5f25_9 apptainer</pre>
 
 
 # Project Directory Structure
