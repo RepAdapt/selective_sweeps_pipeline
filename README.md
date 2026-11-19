@@ -27,7 +27,7 @@ Download the OmegaPlus v3.0.3 Apptainer image here: https://github.com/RepAdapt/
 
 Download the bcftools v1.16 Apptainer image with: <pre> singularity pull https://depot.galaxyproject.org/singularity/bcftools:1.16--hfe4b78e_1 </pre>
 Download the vcftools 0.1.16 Apptainer image with: <pre> singularity pull https://depot.galaxyproject.org/singularity/vcftools:0.1.16--pl5321hdcf5f25_9  </pre>
-vcftools
+
 
 Place the OmegaPlus and bcftools Apptainer images in a directory named "apptainer" within your working directory: 
 
