@@ -1,6 +1,4 @@
 # selective_sweeps_pipeline
-TESTING IN PROGRESS
-
 A pipeline for scanning all genes of a species to detect signals of selective sweeps, based on OmegaPlus. Genes with less than 5 SNPs are not analysed (NA).
 
 
